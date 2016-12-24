@@ -7,6 +7,20 @@
 spring:
     profiles:
         name: prod
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        url: jdbc:mysql://localhost:3306/kothamala?useUnicode=true&characterEncoding=utf8&useSSL=false
+        name:
+        username: root
+        password: root
+    jpa:
+      database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+      database: MYSQL
+      show-sql: false
 
 server:
     port: 8080
+    compression:
+      enabled: true
+      mime-types: text/html,text/xml,text/plain,text/css, application/javascript, application/json
+      min-response-size: 1024
