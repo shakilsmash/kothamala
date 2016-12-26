@@ -1,4 +1,4 @@
-package com.onnorokomweb.domain;
+package com.ronniegnr.kothamala.domain;
 
 import javax.persistence.*;
 

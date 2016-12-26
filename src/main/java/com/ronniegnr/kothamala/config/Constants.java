@@ -1,4 +1,4 @@
-package com.onnorokomweb.config;
+package com.ronniegnr.kothamala.config;
 
 /**
  * Application constants.

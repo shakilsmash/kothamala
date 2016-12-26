@@ -1,7 +1,7 @@
-package com.onnorokomweb;
+package com.ronniegnr.kothamala;
 
-import com.onnorokomweb.config.Constants;
-import com.onnorokomweb.config.DefaultProfileUtils;
+import com.ronniegnr.kothamala.config.Constants;
+import com.ronniegnr.kothamala.config.DefaultProfileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
