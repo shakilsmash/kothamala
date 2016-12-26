@@ -7,12 +7,21 @@
 spring:
     profiles:
         name: dev
+    devtools:
+        restart:
+            enabled: true
+        livereload:
+            enabled: false
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
-        url: jdbc:mysql://localhost:3306/kothamala?useUnicode=true&characterEncoding=utf8&useSSL=false
+        url: jdbc:h2:file:./target/h2db/db/kothamala;DB_CLOSE_DELAY=-1
         name:
-        username: root
-        password: root
+        username: kothamala
+        password:
+    h2:
+        console:
+            enabled: true
+
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
         database: MYSQL
