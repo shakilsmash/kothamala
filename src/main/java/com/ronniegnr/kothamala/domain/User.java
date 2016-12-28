@@ -1,29 +1,33 @@
 package com.ronniegnr.kothamala.domain;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
+import org.hibernate.validator.constraints.Email;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
-public class User {
+@Table(name = "user")
+public class User extends AbstractAuditingEntity implements Serializable {
+
+    private static final long serialVersionUID = 1;
+
     private long id;
-    private String passwordHash;
+    private String email;
     private String firstName;
     private String lastName;
-    private String email;
-    private boolean activated;
-    private String langKey;
+    private String password;
+    private UserStatus status;
     private String activationKey;
     private String resetKey;
     private Timestamp resetDate;
-    private String createdBy;
-    private Timestamp createdDate;
-    private String lastModifiedBy;
-    private Timestamp lastModifiedDate;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     public long getId() {
         return id;
@@ -33,18 +37,21 @@ public class User {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "password_hash", nullable = true, length = 60)
-    public String getPasswordHash() {
-        return passwordHash;
+    @JsonIgnore
+    @NotNull
+    @Size(min = 60, max = 60)
+    @Column(name = "password_hash", nullable = false, length = 60)
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String passwordHash) {
+        this.password = passwordHash;
     }
 
-    @Basic
-    @Column(name = "first_name", nullable = true, length = 50)
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "first_name", nullable = false, length = 50)
     public String getFirstName() {
         return firstName;
     }
@@ -53,8 +60,9 @@ public class User {
         this.firstName = firstName;
     }
 
-    @Basic
-    @Column(name = "last_name", nullable = true, length = 50)
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "last_name", nullable = false, length = 50)
     public String getLastName() {
         return lastName;
     }
@@ -63,8 +71,10 @@ public class User {
         this.lastName = lastName;
     }
 
-    @Basic
-    @Column(name = "email", nullable = true, length = 100)
+    @NotNull
+    @Email
+    @Size(max = 100)
+    @Column(name = "email", nullable = false, length = 100)
     public String getEmail() {
         return email;
     }
@@ -73,28 +83,20 @@ public class User {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "activated", nullable = false)
-    public boolean isActivated() {
-        return activated;
+    @NotNull
+    @Size(max = 20)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 20)
+    public UserStatus getStatus() {
+        return status;
     }
 
-    public void setActivated(boolean activated) {
-        this.activated = activated;
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 
-    @Basic
-    @Column(name = "lang_key", nullable = true, length = 5)
-    public String getLangKey() {
-        return langKey;
-    }
-
-    public void setLangKey(String langKey) {
-        this.langKey = langKey;
-    }
-
-    @Basic
-    @Column(name = "activation_key", nullable = true, length = 20)
+    @Size(max = 20)
+    @Column(name = "activation_key", length = 20)
     public String getActivationKey() {
         return activationKey;
     }
@@ -103,8 +105,8 @@ public class User {
         this.activationKey = activationKey;
     }
 
-    @Basic
-    @Column(name = "reset_key", nullable = true, length = 20)
+    @Size(max = 20)
+    @Column(name = "reset_key", length = 20)
     public String getResetKey() {
         return resetKey;
     }
@@ -113,8 +115,7 @@ public class User {
         this.resetKey = resetKey;
     }
 
-    @Basic
-    @Column(name = "reset_date", nullable = true)
+    @Column(name = "reset_date")
     public Timestamp getResetDate() {
         return resetDate;
     }
@@ -123,45 +124,6 @@ public class User {
         this.resetDate = resetDate;
     }
 
-    @Basic
-    @Column(name = "created_by", nullable = false, length = 50)
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    @Basic
-    @Column(name = "created_date", nullable = false)
-    public Timestamp getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Timestamp createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @Basic
-    @Column(name = "last_modified_by", nullable = true, length = 50)
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    @Basic
-    @Column(name = "last_modified_date", nullable = true)
-    public Timestamp getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Timestamp lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -171,19 +133,14 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        if (activated != user.activated) return false;
-        if (passwordHash != null ? !passwordHash.equals(user.passwordHash) : user.passwordHash != null) return false;
+        if (status != user.status) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
         if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (langKey != null ? !langKey.equals(user.langKey) : user.langKey != null) return false;
         if (activationKey != null ? !activationKey.equals(user.activationKey) : user.activationKey != null) return false;
         if (resetKey != null ? !resetKey.equals(user.resetKey) : user.resetKey != null) return false;
         if (resetDate != null ? !resetDate.equals(user.resetDate) : user.resetDate != null) return false;
-        if (createdBy != null ? !createdBy.equals(user.createdBy) : user.createdBy != null) return false;
-        if (createdDate != null ? !createdDate.equals(user.createdDate) : user.createdDate != null) return false;
-        if (lastModifiedBy != null ? !lastModifiedBy.equals(user.lastModifiedBy) : user.lastModifiedBy != null) return false;
-        if (lastModifiedDate != null ? !lastModifiedDate.equals(user.lastModifiedDate) : user.lastModifiedDate != null) return false;
 
         return true;
     }
@@ -191,19 +148,16 @@ public class User {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (passwordHash != null ? passwordHash.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (activated ? 1 : 0);
-        result = 31 * result + (langKey != null ? langKey.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (activationKey != null ? activationKey.hashCode() : 0);
         result = 31 * result + (resetKey != null ? resetKey.hashCode() : 0);
         result = 31 * result + (resetDate != null ? resetDate.hashCode() : 0);
-        result = 31 * result + (createdBy != null ? createdBy.hashCode() : 0);
-        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        result = 31 * result + (lastModifiedBy != null ? lastModifiedBy.hashCode() : 0);
-        result = 31 * result + (lastModifiedDate != null ? lastModifiedDate.hashCode() : 0);
+
         return result;
     }
+
 }
