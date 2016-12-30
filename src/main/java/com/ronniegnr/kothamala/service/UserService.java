@@ -14,9 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 /**
- * Service class for manager users.
+ * Service class for managing user.
  */
 @Service
 @Transactional
@@ -42,12 +43,43 @@ public class UserService {
         user.setPassword(encryptedPassword);
         user.setStatus(UserStatus.active);
         userRepository.save(user);
-        log.debug("Created Information for User: {}", user);
+        log.debug("Created information for User : {}", user);
         return user;
     }
 
+    public void updateUser(ManagedUserVM managedUserVM) {
+        Optional.of(userRepository.findOne(managedUserVM.getId()))
+                .ifPresent(user -> {
+                    user.setEmail(managedUserVM.getEmail());
+                    user.setFirstName(managedUserVM.getFirstName());
+                    user.setLastName(managedUserVM.getLastName());
+                    user.setStatus(managedUserVM.getStatus());
+                    User updatedUser = userRepository.save(user);
+                    log.debug("Updated information for User : {}", updatedUser);
+                });
+
+    }
+
+    public void deleteUser(long id) {
+        Optional.of(userRepository.findOne(id))
+                .ifPresent(user -> {
+                    userRepository.delete(id);
+                    log.debug("Delete User : {}", user);
+                });
+    }
+
+    @Transactional(readOnly = true)
     public Page<User> findAll(Pageable pageable) {
         return userRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<User> fineOne(long id) {
+        return Optional.of(userRepository.findOne(id));
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> findOneByEmail(String email) {
+        return userRepository.findOneByEmail(email);
+    }
 }
