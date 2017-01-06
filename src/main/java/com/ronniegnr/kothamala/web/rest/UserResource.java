@@ -5,7 +5,6 @@ import com.ronniegnr.kothamala.service.UserService;
 import com.ronniegnr.kothamala.web.rest.util.HeaderUtil;
 import com.ronniegnr.kothamala.web.rest.util.PaginationUtil;
 import com.ronniegnr.kothamala.web.rest.vm.ManagedUserVM;
-import org.hibernate.annotations.GeneratorType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,12 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * REST controller for managing users.
+ */
 @RestController
 @RequestMapping("/api")
 public class UserResource {
@@ -46,9 +49,9 @@ public class UserResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/users")
-    public ResponseEntity<?> createUser(@RequestBody ManagedUserVM managedUserVM) throws URISyntaxException {
+    public ResponseEntity<?> createUser(@Valid @RequestBody ManagedUserVM managedUserVM) throws URISyntaxException {
         log.debug("REST request to save User : {}", managedUserVM);
-        Optional<User> existingUser = userService.findOneByEmail(managedUserVM.getEmail().toLowerCase());
+        Optional<User> existingUser = userService.findOneByEmail(managedUserVM.getEmail());
         if (existingUser.isPresent()) {
             return ResponseEntity.badRequest()
                     .headers(HeaderUtil.createFailureAlert("User", "emailexists", "Email already in use"))
@@ -70,11 +73,12 @@ public class UserResource {
      * @param managedUserVM the user to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated user,
      * or with status 400 (Bad Request) if the email is already in use
+     * or with status 500 (Internal Server Error) if the the user coudn't be updated.
      */
     @PutMapping("/users")
-    public ResponseEntity<?> updateUser(@RequestBody ManagedUserVM managedUserVM) {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody ManagedUserVM managedUserVM) {
         log.debug("REST request to update User : {}", managedUserVM);
-        Optional<User> existingUser = userService.findOneByEmail(managedUserVM.getEmail().toLowerCase());
+        Optional<User> existingUser = userService.findOneByEmail(managedUserVM.getEmail());
         if (existingUser.isPresent() && !(existingUser.get().getId() == managedUserVM.getId())) {
             return ResponseEntity.badRequest()
                     .headers(HeaderUtil.createFailureAlert("User", "emailexists", "Email already in use"))

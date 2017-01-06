@@ -3,6 +3,7 @@ package com.ronniegnr.kothamala.service;
 import com.ronniegnr.kothamala.domain.User;
 import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
 import com.ronniegnr.kothamala.repository.UserRepository;
+import com.ronniegnr.kothamala.security.SecurityUtils;
 import com.ronniegnr.kothamala.service.util.RandomUtil;
 import com.ronniegnr.kothamala.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -60,11 +62,31 @@ public class UserService {
 
     }
 
+    public Optional<User> activateRegistration(String key) {
+        log.debug("Activating user for activation key {}", key);
+        return userRepository.findOneByActivationKey(key)
+                .map(user -> {
+                    user.setStatus(UserStatus.active);
+                    user.setActivationKey(null);
+                    log.debug("User {} activated with key {}", user.getEmail(), key);
+                    return user;
+                });
+    }
+
     public void deleteUser(long id) {
         Optional.of(userRepository.findOne(id))
                 .ifPresent(user -> {
                     userRepository.delete(id);
                     log.debug("Delete User : {}", user);
+                });
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> findOneWithAuthorities() {
+        return userRepository.findOneByEmail(SecurityUtils.getCurentUserEmail())
+                .map(user -> {
+                    user.getAuthorities().size(); // eagerly load the association
+                    return user;
                 });
     }
 
@@ -80,6 +102,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> findOneByEmail(String email) {
-        return userRepository.findOneByEmail(email);
+        return userRepository.findOneByEmail(email.toLowerCase());
     }
 }
