@@ -9,12 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -99,13 +97,44 @@ public class AccountResource {
                 .orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    /*public ResponseEntity<String> saveAccount(@Valid @ResponseBody ManagedUserVM managedUserVM) {
+    /**
+     * POST /account : update the current user information.
+     *
+     * @param managedUserVM the current user information
+     * @return the ResponseEntity with status 200 (OK)
+     * or status 500 (Internal Server Error) if the user couldn't be updated
+     */
+    @PostMapping("/account")
+    public ResponseEntity<?> saveAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
         log.debug("REST request to update current users account with" + managedUserVM);
         return userService.findOneByEmail(managedUserVM.getEmail())
-                .ifPresent(user -> {
-                    return userService.updateUser(managedUserVM);
-                }).
+                .map(user -> {
+                    userService.updateUser(managedUserVM);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                })
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+    }
 
-    }*/
+    /**
+     * POST /account/change_password : changes the current user's password
+     *
+     * @param password the new password
+     * @return the ResponseEntity wth status 200 (OK)
+     * or status 400 (Bad Request) if the new password is not correct
+     */
+    @PostMapping("/account/change_password")
+    public ResponseEntity<?> changePassword(@RequestBody String password) {
+        return Optional.of(password)
+                .filter(x -> checkPasswordLength(x))
+                .map(user -> {
+                    userService.changePassword(password);
+                    return new ResponseEntity<>(HttpStatus.OK);
+                })
+                .orElseGet(() -> new ResponseEntity<>("Incorrect Password", HttpStatus.BAD_REQUEST));
+    }
 
+    private boolean checkPasswordLength(String password) {
+        return password.length() >= ManagedUserVM.PASSWORD_MIN_LENGTH
+                && password.length() <= ManagedUserVM.PASSWORD_MAX_LENGTH;
+    }
 }

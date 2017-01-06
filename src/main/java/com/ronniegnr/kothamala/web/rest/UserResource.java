@@ -125,8 +125,8 @@ public class UserResource {
         log.debug("REST request to get user with id : {}", id);
         return userService.fineOne(id)
                 .map(ManagedUserVM::new)
-                .map(managedUserVM -> new ResponseEntity(managedUserVM, HttpStatus.OK))
-                .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+                .map(managedUserVM -> new ResponseEntity<>(managedUserVM, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**

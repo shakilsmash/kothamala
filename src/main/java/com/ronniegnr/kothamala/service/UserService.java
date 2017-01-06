@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.swing.text.html.Option;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * Service class for managing user.
@@ -103,5 +104,14 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<User> findOneByEmail(String email) {
         return userRepository.findOneByEmail(email.toLowerCase());
+    }
+
+    public void changePassword(String password) {
+        userRepository.findOneByEmail(SecurityUtils.getCurentUserEmail())
+                .ifPresent(user -> {
+                    String encryptedPasword = passwordEncoder.encode(password);
+                    user.setPassword(encryptedPasword);
+                    log.debug("Changed password for User", user);
+                });
     }
 }
