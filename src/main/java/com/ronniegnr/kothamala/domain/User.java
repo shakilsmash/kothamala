@@ -88,9 +88,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     }
 
     @NotNull
-    @Size(max = 20)
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false)
     public UserStatus getStatus() {
         return status;
     }
