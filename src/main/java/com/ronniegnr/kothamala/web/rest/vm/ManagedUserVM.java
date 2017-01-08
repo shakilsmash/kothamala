@@ -42,6 +42,8 @@ public class ManagedUserVM extends UserDTO {
         this.password = password;
     }
 
+    public ManagedUserVM() {}
+
     public Long getId() {
         return id;
     }

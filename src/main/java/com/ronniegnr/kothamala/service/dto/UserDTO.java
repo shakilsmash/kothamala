@@ -47,7 +47,7 @@ public class UserDTO {
         return lastName;
     }
 
-    @Size(max = 20)
+    //@Size(max = 20)
     public UserStatus getStatus() {
         return status;
     }
