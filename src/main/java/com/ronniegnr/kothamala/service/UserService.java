@@ -98,7 +98,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> fineOne(long id) {
-        return Optional.of(userRepository.findOne(id));
+        return Optional.ofNullable(userRepository.findOne(id));
     }
 
     @Transactional(readOnly = true)
