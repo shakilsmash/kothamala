@@ -1,4 +1,4 @@
-package com.onnorokomweb;
+package com.ronniegnr.kothamala;
 
 import org.junit.Ignore;
 import org.junit.Test;
