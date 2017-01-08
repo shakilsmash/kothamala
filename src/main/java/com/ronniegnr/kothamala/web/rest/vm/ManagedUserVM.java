@@ -22,9 +22,6 @@ public class ManagedUserVM extends UserDTO {
     private Timestamp lastModifiedDate;
     private String password;
 
-    public ManagedUserVM() {
-    }
-
     public ManagedUserVM(User user) {
         super(user);
         this.id = user.getId();
