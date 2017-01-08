@@ -40,7 +40,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/h2-console/**");
     }
 
-/*    @Override
+    @Override
     public void configure(HttpSecurity http) throws Exception {
         http.exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
@@ -55,10 +55,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
                 .authorizeRequests()
-                //.antMatchers("/api*//**")
-                .antMatchers("/asdf")
+                .antMatchers("/api*//**")
+                //.antMatchers("/asdf")
                 .permitAll();
-    }*/
+    }
 
 
 }
