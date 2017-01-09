@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 /**
  * A DTO representing a user, with his autorities.
  */
-public class UserDTO {
+public class UserDTO { //data transfer object
 
     private String email;
     private String firstName;
