@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -26,6 +28,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String activationKey;
     private String resetKey;
     private Timestamp resetDate;
+
+    private Set<Authority> authorities = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -85,9 +89,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     }
 
     @NotNull
-    @Size(max = 20)
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false)
     public UserStatus getStatus() {
         return status;
     }
@@ -125,40 +128,18 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.resetDate = resetDate;
     }
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (id != user.id) return false;
-        if (status != user.status) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (firstName != null ? !firstName.equals(user.firstName) : user.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(user.lastName) : user.lastName != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (activationKey != null ? !activationKey.equals(user.activationKey) : user.activationKey != null) return false;
-        if (resetKey != null ? !resetKey.equals(user.resetKey) : user.resetKey != null) return false;
-        if (resetDate != null ? !resetDate.equals(user.resetDate) : user.resetDate != null) return false;
-
-        return true;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")}
+    )
+    public Set<Authority> getAuthorities() {
+        return authorities;
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (status != null ? status.hashCode() : 0);
-        result = 31 * result + (activationKey != null ? activationKey.hashCode() : 0);
-        result = 31 * result + (resetKey != null ? resetKey.hashCode() : 0);
-        result = 31 * result + (resetDate != null ? resetDate.hashCode() : 0);
-
-        return result;
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
-
 }

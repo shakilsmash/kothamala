@@ -3,6 +3,7 @@ package com.ronniegnr.kothamala.service;
 import com.ronniegnr.kothamala.domain.User;
 import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
 import com.ronniegnr.kothamala.repository.UserRepository;
+import com.ronniegnr.kothamala.security.SecurityUtils;
 import com.ronniegnr.kothamala.service.util.RandomUtil;
 import com.ronniegnr.kothamala.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
@@ -60,11 +61,31 @@ public class UserService {
 
     }
 
+    public Optional<User> activateRegistration(String key) {
+        log.debug("Activating user for activation key {}", key);
+        return userRepository.findOneByActivationKey(key)
+                .map(user -> {
+                    user.setStatus(UserStatus.active);
+                    user.setActivationKey(null);
+                    log.debug("User {} activated with key {}", user.getEmail(), key);
+                    return user;
+                });
+    }
+
     public void deleteUser(long id) {
         Optional.of(userRepository.findOne(id))
                 .ifPresent(user -> {
                     userRepository.delete(id);
                     log.debug("Delete User : {}", user);
+                });
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> findOneWithAuthorities() {
+        return userRepository.findOneByEmail(SecurityUtils.getCurentUserEmail())
+                .map(user -> {
+                    user.getAuthorities().size(); // eagerly load the association
+                    return user;
                 });
     }
 
@@ -75,11 +96,20 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> fineOne(long id) {
-        return Optional.of(userRepository.findOne(id));
+        return Optional.ofNullable(userRepository.findOne(id));
     }
 
     @Transactional(readOnly = true)
     public Optional<User> findOneByEmail(String email) {
-        return userRepository.findOneByEmail(email);
+        return userRepository.findOneByEmail(email.toLowerCase());
+    }
+
+    public void changePassword(String password) {
+        userRepository.findOneByEmail(SecurityUtils.getCurentUserEmail())
+                .ifPresent(user -> {
+                    String encryptedPasword = passwordEncoder.encode(password);
+                    user.setPassword(encryptedPasword);
+                    log.debug("Changed password for User", user);
+                });
     }
 }
