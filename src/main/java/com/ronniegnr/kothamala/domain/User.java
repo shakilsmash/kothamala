@@ -18,16 +18,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1;
 
-
     private long id;
-    private String email;
     private String firstName;
     private String lastName;
-    private String password;
+    private String email;
+    private String mobile;
     private UserStatus status;
+    private String passwordHash;
     private String activationKey;
-    private String resetKey;
-    private Timestamp resetDate;
+    private String avatar;
 
     private Set<Authority> authorities = new HashSet<>();
 
@@ -46,12 +45,12 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @NotNull
     @Size(min = 60, max = 60)
     @Column(name = "password_hash", nullable = false, length = 60)
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String passwordHash) {
-        this.password = passwordHash;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     @NotNull
@@ -109,23 +108,23 @@ public class User extends AbstractAuditingEntity implements Serializable {
         this.activationKey = activationKey;
     }
 
-    @Size(max = 20)
-    @Column(name = "reset_key", length = 20)
-    public String getResetKey() {
-        return resetKey;
+    @NotNull
+    @Column(name = "mobile", nullable = false, length = 50)
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setResetKey(String resetKey) {
-        this.resetKey = resetKey;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    @Column(name = "reset_date")
-    public Timestamp getResetDate() {
-        return resetDate;
+    @Column(name = "avatar", length = 45)
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setResetDate(Timestamp resetDate) {
-        this.resetDate = resetDate;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @JsonIgnore

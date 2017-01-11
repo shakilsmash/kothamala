@@ -42,7 +42,7 @@ public class UserDetailsService implements org.springframework.security.core.use
             List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
                     .map(authority -> new SimpleGrantedAuthority(authority.getName()))
                     .collect(Collectors.toList());
-            return new org.springframework.security.core.userdetails.User(emailInLowerCase, user.getPassword(), grantedAuthorities);
+            return new org.springframework.security.core.userdetails.User(emailInLowerCase, user.getPasswordHash(), grantedAuthorities);
 
         }).orElseThrow(() -> new UsernameNotFoundException("User " + emailInLowerCase + " was not found"));
     }

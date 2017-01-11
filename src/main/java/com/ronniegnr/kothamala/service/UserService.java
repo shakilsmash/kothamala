@@ -41,7 +41,7 @@ public class UserService {
         user.setFirstName(managedUserVM.getFirstName());
         user.setLastName(managedUserVM.getLastName());
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
-        user.setPassword(encryptedPassword);
+        user.setPasswordHash(encryptedPassword);
         user.setStatus(UserStatus.active);
         userRepository.save(user);
         log.debug("Created information for User : {}", user);
@@ -108,7 +108,7 @@ public class UserService {
         userRepository.findOneByEmail(SecurityUtils.getCurentUserEmail())
                 .ifPresent(user -> {
                     String encryptedPasword = passwordEncoder.encode(password);
-                    user.setPassword(encryptedPasword);
+                    user.setPasswordHash(encryptedPasword);
                     log.debug("Changed password for User", user);
                 });
     }
