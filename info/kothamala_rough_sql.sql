@@ -46,20 +46,20 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `kothamala_rough`.`post` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `status` VARCHAR(10) NOT NULL,
-  `like_count` INT NULL,
-  `dislike_count` INT NULL,
+  `likeCount` INT NULL,
+  `dislikeCount` INT NULL,
   `created_by` VARCHAR(45) NOT NULL,
   `created_date` DATETIME NOT NULL,
   `last_modified_by` VARCHAR(45) NULL,
   `last_modified_date` DATETIME NULL,
-  `comment_count` INT NULL,
-  `user_id` INT NOT NULL,
+  `commentCount` INT NULL,
+  `userId` INT NOT NULL,
   `title` VARCHAR(200) NOT NULL,
-  `post_text` TEXT NOT NULL,
+  `postText` TEXT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_post_user1_idx` (`user_id` ASC),
+  INDEX `fk_post_user1_idx` (`userId` ASC),
   CONSTRAINT `fk_post_user1`
-    FOREIGN KEY (`user_id`)
+    FOREIGN KEY (`userId`)
     REFERENCES `kothamala_rough`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -78,18 +78,18 @@ CREATE TABLE IF NOT EXISTS `kothamala_rough`.`comment` (
   `last_modified_date` DATETIME NULL,
   `parent_comment_id` INT NULL,
   `post_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
+  `userId` INT NOT NULL,
   `comment_text` TEXT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_comment_post1_idx` (`post_id` ASC),
-  INDEX `fk_comment_user1_idx` (`user_id` ASC),
+  INDEX `fk_comment_user1_idx` (`userId` ASC),
   CONSTRAINT `fk_comment_post1`
     FOREIGN KEY (`post_id`)
     REFERENCES `kothamala_rough`.`post` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_comment_user1`
-    FOREIGN KEY (`user_id`)
+    FOREIGN KEY (`userId`)
     REFERENCES `kothamala_rough`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -107,17 +107,17 @@ CREATE TABLE IF NOT EXISTS `kothamala_rough`.`vote` (
   `last_modified_by` VARCHAR(45) NULL,
   `last_modified_date` DATETIME NULL,
   `post_id` INT NOT NULL,
-  `user_id` INT NOT NULL,
+  `userId` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_vote_post1_idx` (`post_id` ASC),
-  INDEX `fk_vote_user1_idx` (`user_id` ASC),
+  INDEX `fk_vote_user1_idx` (`userId` ASC),
   CONSTRAINT `fk_vote_post1`
     FOREIGN KEY (`post_id`)
     REFERENCES `kothamala_rough`.`post` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_vote_user1`
-    FOREIGN KEY (`user_id`)
+    FOREIGN KEY (`userId`)
     REFERENCES `kothamala_rough`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -158,13 +158,13 @@ ENGINE = InnoDB;
 -- Table `kothamala_rough`.`user_has_role`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `kothamala_rough`.`user_has_role` (
-  `user_id` INT NOT NULL,
+  `userId` INT NOT NULL,
   `role_id` INT NOT NULL,
-  PRIMARY KEY (`user_id`, `role_id`),
+  PRIMARY KEY (`userId`, `role_id`),
   INDEX `fk_user_has_role_role1_idx` (`role_id` ASC),
-  INDEX `fk_user_has_role_user_idx` (`user_id` ASC),
+  INDEX `fk_user_has_role_user_idx` (`userId` ASC),
   CONSTRAINT `fk_user_has_role_user`
-    FOREIGN KEY (`user_id`)
+    FOREIGN KEY (`userId`)
     REFERENCES `kothamala_rough`.`user` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
