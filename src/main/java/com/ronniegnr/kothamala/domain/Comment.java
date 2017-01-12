@@ -72,7 +72,7 @@ public class Comment extends AbstractAuditingEntity implements Serializable {
 
     @NotNull
     @Size(min = 1)
-    @Column(name = "parent_comment_id", nullable = false, length = 5000)
+    @Column(name = "comment_text", nullable = false, length = 5000)
     public String getCommentText() {
         return commentText;
     }
