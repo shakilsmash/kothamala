@@ -65,16 +65,6 @@ public class Post extends AbstractAuditingEntity implements Serializable {
         this.status = status;
     }
 
-    /*@NotNull
-    @Column(name = "user_id", nullable = false)
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }*/
-
     @ManyToOne
     public User getUser() {
         return user;
