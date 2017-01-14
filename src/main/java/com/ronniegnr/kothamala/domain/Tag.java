@@ -45,7 +45,7 @@ public class Tag extends AbstractAuditingEntity implements Serializable {
     public void setFirstName(String firstName) {
         this.name = firstName;
     }
-    
+
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
