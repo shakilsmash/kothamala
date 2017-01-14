@@ -1,14 +1,12 @@
 package com.ronniegnr.kothamala.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,12 +16,14 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1;
 
+    public enum Status { ACTIVE, INACTIVE, BANNED }
+
     private long id;
     private String firstName;
     private String lastName;
     private String email;
     private String mobile;
-    private UserStatus status;
+    private Status status;
     private String passwordHash;
     private String activationKey;
     private String avatar;
@@ -90,11 +90,11 @@ public class User extends AbstractAuditingEntity implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    public UserStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -140,5 +140,21 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", status=" + status +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", activationKey='" + activationKey + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", authorities=" + authorities +
+                '}';
     }
 }

@@ -1,7 +1,5 @@
 package com.ronniegnr.kothamala.domain;
 
-import com.ronniegnr.kothamala.domain.enumeration.CommentStatus;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -13,8 +11,10 @@ public class Comment extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1;
 
+    public enum Status { ACTIVE, INACTIVE, BANNED }
+
     private long id;
-    private CommentStatus status;
+    private Status status;
     private long parentCommentId;
     private long postId;
     private long userId;
@@ -35,11 +35,11 @@ public class Comment extends AbstractAuditingEntity implements Serializable {
     @Size(max = 10)
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)
-    public CommentStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(CommentStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
@@ -79,5 +79,17 @@ public class Comment extends AbstractAuditingEntity implements Serializable {
 
     public void setCommentText(String commentText) {
         this.commentText = commentText;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", status=" + status +
+                ", parentCommentId=" + parentCommentId +
+                ", postId=" + postId +
+                ", userId=" + userId +
+                ", commentText='" + commentText + '\'' +
+                '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.ronniegnr.kothamala.service.dto;
 
 import com.ronniegnr.kothamala.domain.User;
-import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
 import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.Size;
@@ -14,7 +13,7 @@ public class UserDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private UserStatus status;
+    private User.Status status;
 
     public UserDTO() {
 
@@ -24,7 +23,7 @@ public class UserDTO {
         this(user.getEmail(), user.getFirstName(), user.getLastName(), user.getStatus());
     }
 
-    public UserDTO(String email, String firstName, String lastName, UserStatus status) {
+    public UserDTO(String email, String firstName, String lastName, User.Status status) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -48,7 +47,7 @@ public class UserDTO {
     }
 
     //@Size(max = 20)
-    public UserStatus getStatus() {
+    public User.Status getStatus() {
         return status;
     }
 

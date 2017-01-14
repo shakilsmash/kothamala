@@ -1,7 +1,6 @@
 package com.ronniegnr.kothamala.security;
 
 import com.ronniegnr.kothamala.domain.User;
-import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
 import com.ronniegnr.kothamala.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ public class UserDetailsService implements org.springframework.security.core.use
         String emailInLowerCase = email.toLowerCase();
         Optional<User> userFromDatabase =  userRepository.findOneByEmail(emailInLowerCase);
         return userFromDatabase.map(user -> {
-            if(user.getStatus() != UserStatus.active) {
+            if(user.getStatus() != User.Status.ACTIVE) {
                 throw new UserNotActivatedException("User " + emailInLowerCase + " is not activated");
             }
             List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()

@@ -1,7 +1,6 @@
 package com.ronniegnr.kothamala.web.rest.vm;
 
 import com.ronniegnr.kothamala.domain.User;
-import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
 import com.ronniegnr.kothamala.service.dto.UserDTO;
 
 import javax.validation.constraints.Size;
@@ -32,7 +31,7 @@ public class ManagedUserVM extends UserDTO {
         this.password = null;
     }
 
-    public ManagedUserVM(Long id, String email, String firstName, String lastName, String password, UserStatus status, String createdBy, Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) {
+    public ManagedUserVM(Long id, String email, String firstName, String lastName, String password, User.Status status, String createdBy, Timestamp createdDate, String lastModifiedBy, Timestamp lastModifiedDate) {
         super(email, firstName, lastName, status);
         this.id = id;
         this.createdBy = createdBy;

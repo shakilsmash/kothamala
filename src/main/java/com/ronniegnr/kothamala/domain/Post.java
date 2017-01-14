@@ -1,7 +1,5 @@
 package com.ronniegnr.kothamala.domain;
 
-import com.ronniegnr.kothamala.domain.enumeration.PostStatus;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,16 +8,19 @@ import java.io.Serializable;
 @Entity
 @Table(name = "post")
 public class Post extends AbstractAuditingEntity implements Serializable {
+
     private static final long serialVersionUID = 1;
 
+    public enum Status { ACTIVE, INACTIVE }
+
     private long id;
-    private PostStatus status;
+    private String title;
+    private String postText;
+    private Status status;
+    private User user;
     private int likeCount;
     private int dislikeCount;
     private int commentCount;
-    private long userId;
-    private String title;
-    private String postText;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,15 +34,54 @@ public class Post extends AbstractAuditingEntity implements Serializable {
     }
 
     @NotNull
+    @Column(name = "title", nullable = false, length = 200)
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @NotNull
+    @Column(name = "post_text", nullable = false, length = 100)
+    public String getPostText() {
+        return postText;
+    }
+
+    public void setPostText(String postText) {
+        this.postText = postText;
+    }
+
+    @NotNull
     @Size(max = 10)
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 10)
-    public PostStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(PostStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
+    }
+
+    /*@NotNull
+    @Column(name = "user_id", nullable = false)
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }*/
+
+    @ManyToOne
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Column(name = "like_count")
@@ -72,34 +112,17 @@ public class Post extends AbstractAuditingEntity implements Serializable {
         this.commentCount = commentCount;
     }
 
-    @NotNull
-    @Column(name = "user_id", nullable = false)
-    public long getUserId() {
-        return userId;
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", postText='" + postText + '\'' +
+                ", status=" + status +
+                ", user=" + user +
+                ", likeCount=" + likeCount +
+                ", dislikeCount=" + dislikeCount +
+                ", commentCount=" + commentCount +
+                '}';
     }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    @NotNull
-    @Column(name = "title", nullable = false, length = 200)
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @NotNull
-    @Column(name = "post_text", nullable = false, length = 100)
-    public String getPostText() {
-        return postText;
-    }
-
-    public void setPostText(String postText) {
-        this.postText = postText;
-    }
-
 }

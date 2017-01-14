@@ -1,7 +1,6 @@
 package com.ronniegnr.kothamala.service;
 
 import com.ronniegnr.kothamala.domain.User;
-import com.ronniegnr.kothamala.domain.enumeration.UserStatus;
 import com.ronniegnr.kothamala.repository.UserRepository;
 import com.ronniegnr.kothamala.security.SecurityUtils;
 import com.ronniegnr.kothamala.service.util.RandomUtil;
@@ -42,7 +41,7 @@ public class UserService {
         user.setLastName(managedUserVM.getLastName());
         String encryptedPassword = passwordEncoder.encode(RandomUtil.generatePassword());
         user.setPasswordHash(encryptedPassword);
-        user.setStatus(UserStatus.active);
+        user.setStatus(User.Status.ACTIVE);
         userRepository.save(user);
         log.debug("Created information for User : {}", user);
         return user;
@@ -65,7 +64,7 @@ public class UserService {
         log.debug("Activating user for activation key {}", key);
         return userRepository.findOneByActivationKey(key)
                 .map(user -> {
-                    user.setStatus(UserStatus.active);
+                    user.setStatus(User.Status.ACTIVE);
                     user.setActivationKey(null);
                     log.debug("User {} activated with key {}", user.getEmail(), key);
                     return user;
