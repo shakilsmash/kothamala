@@ -6,19 +6,15 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "vote")
 public class Vote extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1;
 
-    public enum Status { ACTIVE, INACTIVE, BANNED }
-
     private long id;
-    private Status status;
-    private long parentCommentId;
     private long postId;
     private long userId;
-    private String commentText;
+    private boolean isLike;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,26 +27,6 @@ public class Vote extends AbstractAuditingEntity implements Serializable {
         this.id = id;
     }
 
-    @NotNull
-    @Size(max = 10)
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 10)
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    @Column(name = "parent_comment_id")
-    public long getParentCommentId() {
-        return parentCommentId;
-    }
-
-    public void setParentCommentId(long parentCommentId) {
-        this.parentCommentId = parentCommentId;
-    }
 
     @Column(name = "post_id")
     public long getPostId() {
@@ -71,25 +47,22 @@ public class Vote extends AbstractAuditingEntity implements Serializable {
     }
 
     @NotNull
-    @Size(min = 1)
-    @Column(name = "comment_text", nullable = false, length = 5000)
-    public String getCommentText() {
-        return commentText;
+    @Column(name = "isLike", nullable = false)
+    public boolean isLike() {
+        return isLike;
     }
 
-    public void setCommentText(String commentText) {
-        this.commentText = commentText;
+    public void setLike(boolean like) {
+        isLike = like;
     }
 
     @Override
     public String toString() {
         return "Comment{" +
                 "id=" + id +
-                ", status=" + status +
-                ", parentCommentId=" + parentCommentId +
                 ", postId=" + postId +
                 ", userId=" + userId +
-                ", commentText='" + commentText + '\'' +
+                ", isLike=" + isLike +
                 '}';
     }
 }
