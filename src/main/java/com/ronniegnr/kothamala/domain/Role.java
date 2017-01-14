@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "comment")
+@Table(name = "role")
 public class Role extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1;
