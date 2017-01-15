@@ -1,8 +1,5 @@
 package com.ronniegnr.kothamala.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.validator.constraints.Email;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -16,13 +13,11 @@ public class Tag extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1;
 
-    public enum Status { ACTIVE, INACTIVE, BANNED }
+    public enum Status { ACTIVE, INACTIVE }
 
     private long id;
     private String name;
     private Status status;
-
-    private Set<Authority> authorities = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
